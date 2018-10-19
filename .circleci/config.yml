@@ -1,0 +1,27 @@
+version: 2
+jobs:
+    build:
+      working_directory: /code/UnGastos
+      docker: 
+        - image: circleci/python:3.7.0
+      steps:
+        - checkout
+
+        - restore_cache:
+            keys:
+            - v1-dependencies-{{ checksum "requirements.txt" }}
+            - v1-dependencies-  
+
+        - save_cache:
+            paths:
+              - ./venv
+            key: v1-dependencies-{{ checksum "requirements.txt" }}
+        - run:
+            name: Run tests
+            command: docker-compose run test
+        - run:
+            name: Build
+            command: docker-compose run web
+        - store_artifacts:
+            path: test_reports
+            destination: test-reports 

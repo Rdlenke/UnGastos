@@ -2,10 +2,25 @@ version: '3'
 services:
     web:
         image: ungastos
-        command: python3 manage.py runserver 0.0.0.0:8000
+        command: > 
+            sh -c "./../scripts/setup.sh &&
+                   python3 manage.py runserver 0.0.0.0:8000"
         build: 
           context: .
           dockerfile: Dockerfile
+        ports:
+          - 8000:8000
+        volumes:
+          - ./:/code
+        working_dir: /code/UnGastos
+    test:
+        image: ungastos
+        command: >
+            sh -c "./../scripts/setup.sh &&
+                    python3 manage.py test"
+        build:
+            context: .
+            dockerfile: Dockerfile
         ports:
           - 8000:8000
         volumes:
